@@ -1,6 +1,6 @@
 import users from "../database/users";
 
-const deleteUser = () => {
+const deleteUser = (id) => {
   const userIndex = users.findIndex((elem) => elem.uuid === uuid);
 
   if (userIndex === -1) {
