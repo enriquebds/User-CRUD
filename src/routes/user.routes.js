@@ -10,7 +10,7 @@ const routes = Router();
 
 routes.post("", createUserController);
 routes.get("", verifyAuthToken, listUsersController);
-routes.get("/:uuid", listUserByIdController);
+routes.get("/:uuid", verifyAuthToken, listUserByIdController);
 routes.patch("/:uuid", verifyAuthToken, updatedUserController);
 routes.get("/:uuid", verifyAuthToken, deleteUserController);
 
