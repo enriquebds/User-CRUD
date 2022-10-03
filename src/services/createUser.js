@@ -1,16 +1,16 @@
 import users from "../database/users";
 import { v4 as uuidv4 } from "uuid";
 import * as bcrypt from "bcryptjs";
+import { createUserSerializer } from "../serializers";
 
 const createUser = async (name, email, password) => {
-  const hashedPassword = await bcrypt.hash(password, 10);
-
   const userExists = users.find((user) => user.email === email);
 
   if (userExists) {
     return { message: "This email already being used" };
   }
 
+  const hashedPassword = await bcrypt.hash(password, 10);
   const newUser = {
     uuid: uuidv4(),
     createdOn: new Date(),
@@ -30,6 +30,10 @@ const createUser = async (name, email, password) => {
     email: newUser.email,
     isAdm: newUser.isAdm,
   };
+  const teste = await createUserSerializer.validate(newUser, {
+    stripUnknown: true,
+    abortEarly: false,
+  });
 
   return infos;
 };
