@@ -1,25 +1,20 @@
-import users from "../database/users";
+import database from "../database/users";
 
-const updateUser = (uuid, name, email) => {
-  const findUser = users.find((elem) => elem.uuid === uuid);
+const updateUser = async (id, name, email) => {
+  try {
+    const res = await database.query(
+      "UPDATE users SET name = $1, email = $2 WHERE id = $3 RETURNING *;",
+      [name, email, id]
+    );
 
-  const updatedUser = {
-    uuid,
-    createdOn: findUser.createdOn,
-    updatedOn: new Date(),
-    name,
-    email,
-    isAdm: findUser.isAdm,
-  };
+    if (res.rowCount === 0) {
+      throw new Error("User not found");
+    }
 
-  const userIndex = users.findIndex((elem) => elem.uuid === uuid);
-
-  if (userIndex === -1) {
-    return "User not found";
+    return { message: "User updated", user: res.rows[0] };
+  } catch (error) {
+    throw new Error(error);
   }
-
-  users[userIndex] = { ...users[userIndex], ...updatedUser };
-  return updatedUser;
 };
 
 export default updateUser;
