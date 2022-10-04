@@ -1,41 +1,24 @@
-import users from "../database/users";
-import { v4 as uuidv4 } from "uuid";
+import database from "../database/users";
 import * as bcrypt from "bcryptjs";
-import { createUserSerializer } from "../serializers";
 
 const createUser = async (name, email, password) => {
-  const userExists = users.find((user) => user.email === email);
-
-  if (userExists) {
-    return { message: "This email already being used" };
-  }
-
   const hashedPassword = await bcrypt.hash(password, 10);
-  const newUser = {
-    uuid: uuidv4(),
-    createdOn: new Date(),
-    updatedOn: new Date(),
-    name,
-    email,
-    password: hashedPassword,
-  };
 
-  users.push(newUser);
+  try {
+    const res = await database.query(
+      `INSERT INTO 
+      users(name, email, password) 
+      VALUES
+      ($1, $2, $3)
+      RETURNING *
+      `,
+      [name, email, hashedPassword]
+    );
 
-  const infos = {
-    uuid: newUser.uuid,
-    createdOn: newUser.createdOn,
-    updatedOn: newUser.updatedOn,
-    name: newUser.name,
-    email: newUser.email,
-    isAdm: newUser.isAdm,
-  };
-  const teste = await createUserSerializer.validate(newUser, {
-    stripUnknown: true,
-    abortEarly: false,
-  });
-
-  return infos;
+    return res.rows[0];
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
 export default createUser;
