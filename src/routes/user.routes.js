@@ -11,7 +11,7 @@ const routes = Router();
 routes.post("", createUserController);
 routes.get("", verifyAuthToken, listUsersController);
 routes.get("/:uuid", verifyAuthToken, listUserByIdController);
-routes.patch("/:uuid", verifyAuthToken, updatedUserController);
-routes.delete("/:uuid", verifyAuthToken, deleteUserController);
+routes.put("/:id", verifyAuthToken, updatedUserController);
+routes.delete("/:id", verifyAuthToken, deleteUserController);
 
 export default routes;
