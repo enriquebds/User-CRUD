@@ -1,3 +1,15 @@
-const users = []
+import { Client } from "pg";
 
-export default users
+const database = new Client({
+  user: "enriquebds",
+  host: "localhost",
+  database: "users_db",
+  password: "123",
+  port: 5432,
+});
+
+export const startDatabase = async () => {
+  await database.connect();
+};
+
+export default database;
