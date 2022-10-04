@@ -1,12 +1,15 @@
 import updateUser from "../services/updateUser";
 
-const updatedUserController = (req, res) => {
-  const { uuid } = req.params;
-  const { name, email } = req.body;
+const updatedUserController = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, email } = req.body;
+    const updatedUser = await updateUser(id, name, email);
 
-  const updatedUser = updateUser(uuid, name, email);
-
-  return res.status(200).json(updatedUser);
+    return res.status(200).json(updatedUser);
+  } catch (error) {
+    return res.status(400).json(error.message);
+  }
 };
 
 export default updatedUserController;
