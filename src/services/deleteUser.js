@@ -1,15 +1,24 @@
-import users from "../database/users";
+import database from "../database/users";
 
-const deleteUser = (id) => {
-  const userIndex = users.findIndex((elem) => elem.uuid === uuid);
+const deleteUser = async (id) => {
+  try {
+    const res = await database.query(
+      `DELETE FROM 
+      users
+      WHERE 
+      id = $1 
+      RETURNING *;`,
+      [id]
+    );
 
-  if (userIndex === -1) {
-    return { message: "User not found" };
+    if (res.rowCount === 0) {
+      throw new Error("User not found");
+    }
+
+    return "User deleted";
+  } catch (error) {
+    throw new Error(error);
   }
-
-  users.splice(userIndex, 1);
-
-  return { message: "User deleted with success" };
 };
 
 export default deleteUser;
