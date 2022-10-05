@@ -11,6 +11,6 @@ app.use("/user", userRoutes);
 app.use("/login", loginRoutes);
 app.use("/pets", petsRouter);
 
-app.listen(3000, () => {
+app.listen(process.env.PORT || 3000, () => {
   startDatabase();
 });
